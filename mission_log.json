@@ -1,0 +1,14 @@
+[
+    {
+        "timestamp": "2026-10-20T12:50:43",
+        "sim_time": 0,
+        "type": "INFO",
+        "message": "Mission started"
+    },
+    {
+        "timestamp": "2026-10-20T12:51:19",
+        "sim_time": 5550,
+        "type": "INFO",
+        "message": "Orbit 1 completed"
+    }
+]

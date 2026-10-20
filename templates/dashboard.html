@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORBIT-1 | Mission Control</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon">O</div>
+            <div>
+                <h2>ORBIT<span>-1</span></h2>
+                <small>MISSION CONTROL</small>
+            </div>
+        </div>
+
+        <p class="nav-heading">OPERATIONS</p>
+        <nav>
+            <button class="nav-item active" data-page="overview">▦ <span>Mission Overview</span></button>
+            <button class="nav-item" data-page="missions">◈ <span>Mission Management</span></button>
+            <button class="nav-item" data-page="simulator">◎ <span>Orbit Simulator</span></button>
+            <button class="nav-item" data-page="telemetry">⌁ <span>Telemetry & Health</span></button>
+            <button class="nav-item" data-page="scenarios">◇ <span>Scenario Lab</span></button>
+            <button class="nav-item" data-page="events">≡ <span>Event Log</span></button>
+            <button class="nav-item" data-page="history">◷ <span>Historical Analysis</span></button>
+        </nav>
+
+        <div class="sidebar-bottom">
+            <div class="connection"><span class="dot"></span> LOCAL SIMULATOR</div>
+            <button class="nav-item" data-page="settings">⚙ <span>Settings</span></button>
+            <p>ORBIT-1 Prototype · v0.1</p>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">SPACECRAFT OPERATIONS / EARTH ORBIT</p>
+                <h1 id="page-title">Mission Overview</h1>
+            </div>
+            <div class="topbar-right">
+                <span class="demo-tag">DEMO DATA</span>
+                <div class="mission-status"><span class="dot"></span> SIMULATOR READY</div>
+            </div>
+        </header>
+
+        <section id="overview-page" class="page active-page">
+            <div class="mission-banner">
+                <div>
+                    <p class="eyebrow">ACTIVE MISSION</p>
+                    <h2>ORBIT-1 <span class="status-pill">NOMINAL</span></h2>
+                    <p>Low Earth Orbit · Circular orbit simulation</p>
+                </div>
+                <div class="mission-clock">
+                    <small>MISSION ELAPSED TIME</small>
+                    <strong id="mission-time">T+00:00:00</strong>
+                </div>
+            </div>
+
+            <div class="metrics">
+                <article class="metric-card">
+                    <div class="metric-heading">ALTITUDE <span>↕</span></div>
+                    <div class="metric-value">400.0 <small>km</small></div>
+                    <div class="metric-note"><span class="green">●</span> Target altitude</div>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-heading">ORBITAL VELOCITY <span>➤</span></div>
+                    <div class="metric-value">7.67 <small>km/s</small></div>
+                    <div class="metric-note"><span class="green">●</span> Circular orbit estimate</div>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-heading">ORBITAL PERIOD <span>◷</span></div>
+                    <div class="metric-value">92.4 <small>min</small></div>
+                    <div class="metric-note">≈ 5,545 seconds</div>
+                </article>
+                <article class="metric-card">
+                    <div class="metric-heading">COMPLETED ORBITS <span>◎</span></div>
+                    <div class="metric-value" id="orbit-count">0</div>
+                    <div class="metric-note">Full revolutions completed</div>
+                </article>
+            </div>
+
+            <div class="dashboard-grid">
+                <section class="panel orbit-panel">
+                    <div class="panel-header">
+                        <div>
+                            <p class="eyebrow">TRAJECTORY VIEW</p>
+                            <h3>Orbital Visualization</h3>
+                        </div>
+                        <span class="live-label"><span class="dot"></span> SIMULATION</span>
+                    </div>
+
+                    <div class="orbit-scene">
+                        <div class="orbit-label label-leo">LOW EARTH ORBIT</div>
+                        <div class="orbit-ring ring-outer"></div>
+                        <div class="orbit-ring ring-inner"></div>
+                        <div class="earth">
+                            <div class="earth-land"></div>
+                            <span>EARTH</span>
+                        </div>
+                        <div class="satellite-marker" id="satellite-marker">
+                            <span>◆</span>
+                        </div>
+                        <div class="orbit-caption">Illustrative orbit · Not to scale</div>
+                    </div>
+
+                    <div class="orbit-legend">
+                        <span><i class="legend-earth"></i> Earth</span>
+                        <span><i class="legend-orbit"></i> Orbit path</span>
+                        <span><i class="legend-sat"></i> Satellite</span>
+                    </div>
+
+                    <div class="simulation-controls">
+                        <button class="primary-button" id="play-button">▶ Start simulation</button>
+                        <button class="secondary-button" id="reset-button">↺ Reset</button>
+                        <div class="speed-control">
+                            <label for="speed">SIM SPEED</label>
+                            <select id="speed">
+                                <option value="1">1×</option>
+                                <option value="10">10×</option>
+                                <option value="60">60×</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="right-column">
+                    <section class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">SPACECRAFT STATUS</p>
+                                <h3>Health Monitor</h3>
+                            </div>
+                            <span class="status-pill">NOMINAL</span>
+                        </div>
+                        <div class="health-row">
+                            <div><span class="health-icon">↕</span> Altitude limits</div>
+                            <strong class="green">NORMAL</strong>
+                        </div>
+                        <div class="health-row">
+                            <div><span class="health-icon">➤</span> Velocity limits</div>
+                            <strong class="green">NORMAL</strong>
+                        </div>
+                        <div class="health-row">
+                            <div><span class="health-icon">◷</span> Orbit tracking</div>
+                            <strong class="green">READY</strong>
+                        </div>
+                        <div class="health-row">
+                            <div><span class="health-icon">⌁</span> Data source</div>
+                            <strong class="amber">SIMULATED</strong>
+                        </div>
+                    </section>
+
+                    <section class="panel">
+                        <div class="panel-header">
+                            <div>
+                                <p class="eyebrow">MISSION ACTIVITY</p>
+                                <h3>Recent Events</h3>
+                            </div>
+                            <button class="text-button" data-page="events">View all →</button>
+                        </div>
+                        <div id="event-list" class="event-list">
+                            <div class="event">
+                                <span class="event-icon green-bg">✓</span>
+                                <div><strong>Simulator initialized</strong><small>T+00:00:00 · INFO</small></div>
+                            </div>
+                            <div class="event">
+                                <span class="event-icon blue-bg">◈</span>
+                                <div><strong>Orbit parameters loaded</strong><small>Altitude: 400 km · INFO</small></div>
+                            </div>
+                            <div class="event">
+                                <span class="event-icon amber-bg">!</span>
+                                <div><strong>Demo environment active</strong><small>Backend not connected · NOTICE</small></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <footer>ORBIT-1 · Educational orbital simulation · Values are illustrative, not operational spacecraft telemetry.</footer>
+        </section>
+
+        <section id="placeholder-page" class="page">
+            <div class="panel placeholder-panel">
+                <div class="placeholder-icon">◇</div>
+                <p class="eyebrow">ORBIT-1 OPERATIONS MODULE</p>
+                <h2 id="placeholder-title">Module in development</h2>
+                <p id="placeholder-description">This module will be implemented in a future development phase.</p>
+                <button class="primary-button" data-page="overview">← Return to Mission Overview</button>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const navButtons = document.querySelectorAll("[data-page]");
+        const overviewPage = document.getElementById("overview-page");
+        const placeholderPage = document.getElementById("placeholder-page");
+        const pageTitle = document.getElementById("page-title");
+        const placeholderTitle = document.getElementById("placeholder-title");
+        const placeholderDescription = document.getElementById("placeholder-description");
+
+        const pageNames = {
+            overview: "Mission Overview",
+            missions: "Mission Management",
+            simulator: "Orbit Simulator",
+            telemetry: "Telemetry & Health",
+            scenarios: "Scenario Lab",
+            events: "Event Log",
+            history: "Historical Analysis",
+            settings: "Settings"
+        };
+
+        const pageDescriptions = {
+            missions: "Create missions, configure orbital parameters and manage mission profiles.",
+            simulator: "Configure simulation time steps, run orbital calculations and inspect trajectories.",
+            telemetry: "Review spacecraft parameters, health indicators and safety thresholds.",
+            scenarios: "Create and compare simulation scenarios with different mission parameters.",
+            events: "Inspect mission events, warnings and simulation history.",
+            history: "Explore historical runs, compare results and analyze orbital behavior.",
+            settings: "Configure mission defaults, simulation preferences and display settings."
+        };
+
+        navButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                const page = button.dataset.page;
+
+                document.querySelectorAll(".nav-item").forEach(item => {
+                    item.classList.toggle("active", item.dataset.page === page);
+                });
+
+                if (page === "overview") {
+                    overviewPage.classList.add("active-page");
+                    placeholderPage.classList.remove("active-page");
+                } else {
+                    overviewPage.classList.remove("active-page");
+                    placeholderPage.classList.add("active-page");
+                    placeholderTitle.textContent = pageNames[page];
+                    placeholderDescription.textContent =
+                        pageDescriptions[page] || "This module will be implemented in a future development phase.";
+                }
+
+                pageTitle.textContent = pageNames[page] || "Mission Overview";
+            });
+        });
+
+        let elapsed = 0;
+        let running = false;
+        let timer = null;
+
+        const playButton = document.getElementById("play-button");
+        const missionTime = document.getElementById("mission-time");
+        const orbitCount = document.getElementById("orbit-count");
+        const satelliteMarker = document.getElementById("satellite-marker");
+        const speedSelect = document.getElementById("speed");
+        const orbitPeriod = 5545;
+
+        function formatTime(seconds) {
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = Math.floor(seconds % 60);
+            return `T+${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+        }
+
+        function updateSimulation() {
+            elapsed += Number(speedSelect.value);
+            missionTime.textContent = formatTime(elapsed);
+            orbitCount.textContent = Math.floor(elapsed / orbitPeriod);
+
+            const angle = (elapsed % orbitPeriod) / orbitPeriod * 2 * Math.PI;
+            satelliteMarker.style.transform =
+                `translate(-50%, -50%) rotate(${angle * 180 / Math.PI}deg)`;
+            satelliteMarker.style.left = `${50 + 43 * Math.cos(angle)}%`;
+            satelliteMarker.style.top = `${50 + 43 * Math.sin(angle)}%`;
+
+            if (elapsed >= orbitPeriod && Math.floor(elapsed / orbitPeriod) !== Math.floor((elapsed - Number(speedSelect.value)) / orbitPeriod)) {
+                addEvent("Orbit completed", formatTime(elapsed), "green-bg", "✓");
+            }
+        }
+
+        function addEvent(title, detail, colorClass, symbol) {
+            const list = document.getElementById("event-list");
+            const item = document.createElement("div");
+            item.className = "event";
+
+            const icon = document.createElement("span");
+            icon.className = `event-icon ${colorClass}`;
+            icon.textContent = symbol;
+
+            const content = document.createElement("div");
+            const strong = document.createElement("strong");
+            strong.textContent = title;
+            const small = document.createElement("small");
+            small.textContent = `${detail} · INFO`;
+
+            content.append(strong, small);
+            item.append(icon, content);
+            list.prepend(item);
+
+            while (list.children.length > 6) {
+                list.lastElementChild.remove();
+            }
+        }
+
+        playButton.addEventListener("click", () => {
+            running = !running;
+            playButton.textContent = running ? "Ⅱ Pause simulation" : "▶ Resume simulation";
+
+            if (running) {
+                timer = setInterval(updateSimulation, 1000);
+            } else {
+                clearInterval(timer);
+            }
+        });
+
+        document.getElementById("reset-button").addEventListener("click", () => {
+            running = false;
+            clearInterval(timer);
+            elapsed = 0;
+            missionTime.textContent = formatTime(0);
+            orbitCount.textContent = "0";
+            satelliteMarker.style.left = "93%";
+            satelliteMarker.style.top = "50%";
+            playButton.textContent = "▶ Start simulation";
+            addEvent("Simulation reset", "T+00:00:00", "blue-bg", "↺");
+        });
+    </script>
+</body>
+</html>
